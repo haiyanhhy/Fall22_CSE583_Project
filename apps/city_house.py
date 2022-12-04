@@ -65,9 +65,8 @@ def display_property_type_filter(df):
 def display_map(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath):
     # define lat, long for points
     midpoint = (np.average(df['lat']), np.average(df['lon']))
+    map = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=8, scrollWheelZoom=False, tiles='CartoDB positron')
 
-    map = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=7, scrollWheelZoom=False, tiles='CartoDB positron')
-    #map = folium.Map(location=[47, -122], zoom_start=12, scrollWheelZoom=False, tiles='CartoDB positron')
     df2 = df.groupby(['CITY'])['$/SQUARE FEET'].size().reset_index(name='count')
     df3 = df.groupby(['CITY'])['$/SQUARE FEET'].mean().reset_index(name='mean')
     #df2=df.groupby(['CITY'])['$/SQUARE FEET'].describe()[['count', 'mean']]
@@ -116,13 +115,13 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
             popup=df.iloc[i]['LOCATION']
         ).add_to(map)
 
-    #st_map = st_folium(map, width=700, height=450)
-    """
+    st_map = st_folium(map, width=700, height=450)
+    
     city_name = 'Seattle'
     if st_map['last_active_drawing']:
         city_name = st_map['last_active_drawing']['properties']['CityName']
-    """
-    return st_folium(map, width=700, height=450)
+    
+    return 
 
 def display_house_facts(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, title, string_format='${:,}', is_prediction=False):
     df = df[(df['SOLD YEAR'] == year) & (df['SOLD MONTH_Number'] >= start_month) & (df['SOLD MONTH_Number'] <= end_month)]
@@ -156,7 +155,7 @@ def main():
     min_bed, max_bed = display_bed_filters(df_house)
     min_bath, max_bath = display_bath_filters(df_house)
     city_name = display_city_filter(df_house)
-    st_map = display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
+    display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
 
     #Display Metrics
     st.subheader(f'{city_name} {property_type} Facts')
