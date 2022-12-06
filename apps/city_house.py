@@ -154,7 +154,7 @@ def display_multi_city_filter(df):
     """
     cities = st.multiselect(
         'Select the cities',
-        ["Seattle", "Bellevue", "Redmond", "Kirkland", "NewCastle", "Renton", 
+        ["Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton", 
         "Sammamish", "Issaquah",
         "Bothell", "Woodinville"])
     st.write('You selected:', cities)
