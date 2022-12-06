@@ -23,8 +23,7 @@ def display_time_filters(df):
         'Select a range of months',
         options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         value=(1, 2))
-    st.write('Sold month between', start_month, 'and', end_month)
-    #month = st.sidebar.radio('Sold Month', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+    st.write('Sold between', start_month,'/',year, 'and', end_month,'/',year)
     st.header(f'{year} month {start_month}-{end_month}')
     return year, start_month, end_month
 
@@ -356,8 +355,8 @@ def main():
     price_map(df_house)
 
     #Display Metrics
-    st.subheader(f'{city_name} {property_type} Facts')
-    st.write(f'for #beds ranges from {min_bed} to {max_bed} and #baths ranges from {min_bath} to {max_bath}')
+    st.subheader(f'{city_name} {property_type} Housing Facts')
+    st.write(f'for #beds ranges from {min_bed} to {max_bed} and #baths ranges from {min_bath} to {max_bath} from {start_month}/{year} to {end_month}/{year}')
 
     col1, col2, col3 = st.columns(3)
     with col1:
