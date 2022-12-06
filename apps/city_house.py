@@ -147,6 +147,7 @@ def display_house_facts(df, year, start_month, end_month, property_type, city_na
     total_sale = df['$/SQUARE FEET'].count()
     st.metric(title, string_format.format(round(ave_price)), string_format.format(round(total_sale)))
 
+## define a multiselection bar for cities
 def display_multi_city_filter(df):
     """
     mulit select city 
@@ -190,7 +191,6 @@ def price_by_time(df,cities):
     city_price_change_3year = city_price_change_3year.sort_values("PRICE_CHANGE_PERCENT_FROM_2019_10", ascending=True)
 
     return city_price_by_time,city_price_change_5year,city_price_change_3year
-
 
 def monthly_house_price_tendency(df,property_type,city_price_by_time):
     df = df[df["PROPERTY TYPE"]== property_type ]
@@ -346,6 +346,8 @@ def main():
     min_bath, max_bath = display_bath_filters(df_house)
     city_name = display_city_filter(df_house)
     display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
+
+    st.subheader('Price change analysis by cities')
     cities = display_multi_city_filter(df_house)
     city_price_by_time,city_price_change_5year,city_price_change_3year = price_by_time(df_house,cities)
     st.plotly_chart(monthly_house_price_tendency(df_house,property_type,city_price_by_time))
