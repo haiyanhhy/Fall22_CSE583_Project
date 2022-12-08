@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from streamlit_folium import st_folium
 import sys, os
+from prediction_app import prediction
+import streamlit.components.v1 as components
+
+
 
 APP_TITLE = 'Seattle Metropolitan Area Housing Prices'
 APP_SUB_TITLE = 'Source: Redfin' # Need to further specify datasource
@@ -87,7 +91,8 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     DIRNAME = os.path.abspath(__file__ + "/../../")
     #Map base use city boundaries and display info
     choropleth = folium.Choropleth(
-        geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
+        #geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
+        geo_data='/Users/xuqinghu/Desktop/homework/Fall22_CSE583_Project-main/data/WSDOT_-_City_Limits.geojson',
         data=df,
         columns=('CITY', 'mean'),
         key_on='feature.properties.CityName',
@@ -283,7 +288,8 @@ def price_map(df):
     bins = list(zip_prices["PRICE"].quantile([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]))
 
     cp = folium.Choropleth(
-        geo_data="data/wa_washington_zip_codes_geo.min.json",
+        #geo_data="data/wa_washington_zip_codes_geo.min.json",
+        geo_data='/Users/xuqinghu/Desktop/homework/Fall22_CSE583_Project-main/data/wa_washington_zip_codes_geo.min.json',
         name="choropleth",
         data=zip_prices,
         columns=["ZIP OR POSTAL CODE", "PRICE"],
@@ -332,8 +338,9 @@ def main():
 
 
     #Load Data
-    DIRNAME = os.path.abspath(__file__ + "/../../")
-    df_house=pd.read_csv (f'{DIRNAME}/data/redfin-sold-last-five-years/all_cleaned.csv')
+    # DIRNAME = os.path.abspath(__file__ + "/../../")
+    # df_house=pd.read_csv (f'{DIRNAME}/data/redfin-sold-last-five-years/all_cleaned.csv')
+    df_house = pd.read_csv('/Users/xuqinghu/Desktop/homework/Fall22_CSE583_Project-main/data/redfin-sold-last-five-years/all_cleaned.csv')
     df_house.rename({'LATITUDE': 'lat', 'LONGITUDE': 'lon'}, axis=1, inplace=True)
     df_house=df_house.dropna(subset=['BEDS', 'PROPERTY TYPE'])
     df_house=df_house.reset_index(drop=True)
@@ -364,8 +371,14 @@ def main():
     with col2:
         display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Ave $/Sqaure Feet', string_format='${:,}')
     with col3:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Total # Sales', string_format='${:,}')        
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Total # Sales', string_format='${:,}')
+
+    prediction_box = st.sidebar.checkbox('prediction')
+    if prediction_box:
+        components.iframe('http://127.0.0.1:5000', height=900, scrolling=True)
+
 
 
 if __name__ == "__main__":
+
     main()
