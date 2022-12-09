@@ -6,9 +6,13 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from streamlit_folium import st_folium
 import sys, os
+from prediction_app import prediction
+import streamlit.components.v1 as components
+DIRNAME = os.path.abspath(__file__ + "/../../")
 
-APP_TITLE = 'Seattle Metropolitan Area Housing Prices'
-APP_SUB_TITLE = 'Source: Redfin' # Need to further specify datasource
+
+APP_TITLE = 'Seattle Metro Area Housing Prices'
+APP_SUB_TITLE = 'Source: Radfin' # Need to further specify datasource
 
 def display_time_filters(df):
     """
@@ -87,6 +91,7 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     DIRNAME = os.path.abspath(__file__ + "/../../")
     #Map base use city boundaries and display info
     choropleth = folium.Choropleth(
+        #geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
         geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
         data=df,
         columns=('CITY', 'mean'),
@@ -135,6 +140,20 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     
     return 
 
+def display_house_facts(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, title, string_format='${:,}', is_price=False, is_sales=False):
+    df = df[(df['SOLD YEAR'] == year) & (df['SOLD MONTH_Number'] >= start_month) & (df['SOLD MONTH_Number'] <= end_month)]
+    df = df[(df['BEDS'] >= min_bed) & (df['BEDS'] <= max_bed)]
+    df = df[(df['BATHS'] >= min_bath) & (df['BATHS'] <= max_bath)]
+    if city_name:
+        df = df[df['CITY'] == city_name]
+    if property_type:
+        df = df[df['PROPERTY TYPE'] == property_type]
+    df.drop_duplicates(inplace=True)
+    if is_price:
+        ave_price = df['$/SQUARE FEET'].sum() / len(df['$/SQUARE FEET']) if len(df) else 0
+    elif is_sales:
+        total_sale = df['$/SQUARE FEET'].count()
+    st.metric(title, string_format.format(round(ave_price)), string_format.format(round(total_sale)))
 
 ## define a multiselection bar for cities
 def display_multi_city_filter(df):
@@ -273,7 +292,8 @@ def price_map(df):
     bins = list(zip_prices["PRICE"].quantile([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]))
 
     cp = folium.Choropleth(
-        geo_data="data/wa_washington_zip_codes_geo.min.json",
+        geo_data=f'{DIRNAME}/data/wa_washington_zip_codes_geo.min.json',
+        #geo_data='/Users/xuqinghu/Desktop/homework/Fall22_CSE583_Project-main/data/wa_washington_zip_codes_geo.min.json',
         name="choropleth",
         data=zip_prices,
         columns=["ZIP OR POSTAL CODE", "PRICE"],
@@ -314,12 +334,10 @@ def price_map(df):
     return st_m
 
 
-
 def main():
     st.set_page_config(APP_TITLE)
     st.title(APP_TITLE)
     st.caption(APP_SUB_TITLE)
-
 
     #Load Data
     DIRNAME = os.path.abspath(__file__ + "/../../")
@@ -342,7 +360,18 @@ def main():
     
     city_name = display_city_filter(df_house)
     display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
+    #Display Metrics
+    st.subheader(f'{city_name} {property_type} Housing Facts')
+    st.write(f'for #beds ranges from {min_bed} to {max_bed} and #baths ranges from {min_bath} to {max_bath} from {start_month}/{year} to {end_month}/{year}')
 
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Selected City', string_format='${:,}')
+    with col2:
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Ave $/Sqaure Feet', string_format='${:,}', is_price=T)
+    with col3:
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Total # Sales', string_format='${:,}', is_sales=T)
+    
     st.subheader('Price change analysis by cities')
     cities = display_multi_city_filter(df_house)
     city_price_by_time,city_price_change_5year,city_price_change_3year = price_by_time(df_house,cities)
@@ -351,5 +380,11 @@ def main():
     st.plotly_chart(house_price_change_from_highest_to_now_3years(city_price_change_3year))
     price_map(df_house)
     
+
+    prediction_box = st.sidebar.checkbox('prediction')
+    if prediction_box:
+        components.iframe('http://127.0.0.1:5000', height=900, scrolling=True)
+
+
 if __name__ == "__main__":
     main()
