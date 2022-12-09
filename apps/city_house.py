@@ -133,11 +133,7 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
 
     st_map = st_folium(map, width=700, height=450)
     
-    city_name = 'Seattle'
-    if st_map['last_active_drawing']:
-        city_name = st_map['last_active_drawing']['properties']['CityName']
-    
-    return 
+    return  df
 
 ## define a multiselection bar for cities
 def display_multi_city_filter(df):

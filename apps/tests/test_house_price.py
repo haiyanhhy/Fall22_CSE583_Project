@@ -1,5 +1,9 @@
 import numpy as np
+import pandas as pd
 import unittest
+import sys, os
+DIRNAME = os.path.abspath(__file__ + "/../../../")
+print(DIRNAME)
 
 from city_house import display_time_filters
 from city_house import display_city_filter
@@ -16,78 +20,92 @@ from city_house import house_price_change_from_highest_to_now_3years
 from city_house import price_map
 #from city_house import main
 
-class TestKnn(unittest.TestCase):
+#Import house price data
+df_house=pd.read_csv (f'{DIRNAME}/data/redfin-sold-last-five-years/all_cleaned.csv')
+df_house.rename({'LATITUDE': 'lat', 'LONGITUDE': 'lon'}, axis=1, inplace=True)
+df_house=df_house.dropna(subset=['BEDS', 'PROPERTY TYPE'])
+df_house=df_house.reset_index(drop=True)
 
-    def test_smoke(self):
+class Testcity_house(unittest.TestCase):
+    def test_dataframe_filters(self):
         """
-        smoke test
+        smoke tests for dataframe filter
         """
-        knn_regression(3, 
-                       np.array([[3, 1, 230],
-                                 [6, 2, 745],
-                                 [6, 6, 1080],
-                                 [4, 3, 495],
-                                 [2, 5, 260]]),
-                       np.array([5, 4]))
+        display_time_filters(df_house)
+        display_bath_filters(df_house)
+        display_bed_filters(df_house)
+        display_city_filter(df_house)
+        display_property_type_filter(df_house)
         return
     
-    def test_3_neighbors(self):
+    def test_map_display_single_select_1b1b(self):
         """
-        one-shot test 1
+        smoke test marginal values - bed and bath
+        on the map, we provide the options to select ranges of beds and baths
+        this test tests wether the function breaks when min=max
         """
-        assert np.isclose(knn_regression(3, 
-                                         np.array([[3, 1, 230],
-                                                   [6, 2, 745],
-                                                   [6, 6, 1080],
-                                                   [4, 3, 495],
-                                                   [2, 5, 260]]),
-                                         np.array([5, 4])),
-                          773.33)
+        display_map(df_house, 2022, 1, 3, 'Single Family Residential', 'Kirkland', 1, 1, 1, 1)
+        return
+
+    def test_map_display_single_select_month(self):
+        """
+        smoke test marginal values - month
+        on the map, we provide the options to select ranges of months
+        this test tests wether the function breaks when only select 1 month
+        """
+        display_map(df_house, 2022, 1, 1, 'Single Family Residential', 'Kirkland', 1, 3, 1, 3)
+        return
+
+    def test_map_display_all_cities(self):
+        """
+        smoke test marginal values - cities
+        allow map to mark all cities at once
+        """
+        display_map(df_house, 2022, 1, 1, 'Single Family Residential', '', 1, 3, 1, 3)
         return
     
-    def test_4_neighbors(self):
-        """
-        one-shot test 2
-        """
-        knn_pred_y=knn_regression(4, 
-                                  np.array([[3, 1, 230],
-                                            [6, 2, 745],
-                                            [6, 6, 1080],
-                                            [4, 3, 495],
-                                            [2, 5, 260]]),
-                                  np.array([5, 4]))
-        assert np.isclose(knn_pred_y, 645.0)
-        return
-    
-    def test_3D_arrey_query(self):
+    def test_multiple_years(self):
         """
         edge test 1
+        streamlit map only mark single year data
         """
         with self.assertRaises(ValueError):
-            knn_regression(3, 
-                           np.array([[3, 1, 230],
-                                     [6, 2, 745],
-                                     [6, 6, 1080],
-                                     [4, 3, 495],
-                                     [2, 5, 260]]),
-                           np.array([5, 4, 3])) 
+            display_map(df_house, [2021, 2022], 1, 3, 'Timeshare', 'Alderwood', 1, 3, 1, 3)
         return
 
-    def test_missing_data(self):
+    def test_zero_input(self):
         """
-        edge test 2
+        one-shot test 1
+        some combination of selections does not have output as there is no such sale record
+        in this case, we want to pass a empty df to the st.map then no markes will show up on map
         """
-        with self.assertRaises(ValueError):
-            knn_regression(3, 
-                           np.array([[3, 1, 230],
-                                     [6, 2, 745],
-                                     [6, 6],
-                                     [4, 3, 495],
-                                     [2, 5, 260]]),
-                           np.array([5, 4])) 
-        return
+        df=display_map(df_house, 2022, 1, 3, 'Timeshare', 'Alderwood', 1, 3, 1, 3)
+        try:
+            len(df['CITY'])==0, "empty df rendered"
+        except AssertionError as msg:
+            print(msg)
+        
+    def test_initial_render_city(self):
+        """
+        one-shot test 2
+        the city displayed when open the map on the first time should be Kirkland
+        """
+        try:
+            assert display_city_filter(df_house)!="Kirkland", "wrong initial city"
+        except AssertionError as msg:
+            print(msg)
+
+    def test_initial_render_property_type(self):
+        """
+        one-shot test 3
+        the propoerty type displayed when open the map on the first time should be Single Family Residential
+        """
+        try:
+            assert display_property_type_filter(df_house)!="Single Family Residential", "wrong initial property type"
+        except AssertionError as msg:
+            print(msg)
 
 """
-suite=unittest.TestLoader().loadTestsFromTestCase(TestKnn)
+suite=unittest.TestLoader().loadTestsFromTestCase(Testcity_house)
 _=unittest.TextTestRunner().run(suite)
 """
