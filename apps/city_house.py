@@ -10,7 +10,6 @@ from prediction_app import prediction
 import streamlit.components.v1 as components
 DIRNAME = os.path.abspath(__file__ + "/../../")
 
-
 APP_TITLE = 'Seattle Metro Area Housing Prices'
 APP_SUB_TITLE = 'Source: Radfin' # Need to further specify datasource
 
@@ -139,21 +138,6 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
         city_name = st_map['last_active_drawing']['properties']['CityName']
     
     return 
-
-def display_house_facts(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, title, string_format='${:,}', is_price=False, is_sales=False):
-    df = df[(df['SOLD YEAR'] == year) & (df['SOLD MONTH_Number'] >= start_month) & (df['SOLD MONTH_Number'] <= end_month)]
-    df = df[(df['BEDS'] >= min_bed) & (df['BEDS'] <= max_bed)]
-    df = df[(df['BATHS'] >= min_bath) & (df['BATHS'] <= max_bath)]
-    if city_name:
-        df = df[df['CITY'] == city_name]
-    if property_type:
-        df = df[df['PROPERTY TYPE'] == property_type]
-    df.drop_duplicates(inplace=True)
-    if is_price:
-        ave_price = df['$/SQUARE FEET'].sum() / len(df['$/SQUARE FEET']) if len(df) else 0
-    elif is_sales:
-        total_sale = df['$/SQUARE FEET'].count()
-    st.metric(title, string_format.format(round(ave_price)), string_format.format(round(total_sale)))
 
 ## define a multiselection bar for cities
 def display_multi_city_filter(df):
@@ -340,7 +324,6 @@ def main():
     st.caption(APP_SUB_TITLE)
 
     #Load Data
-    DIRNAME = os.path.abspath(__file__ + "/../../")
     df_house=pd.read_csv (f'{DIRNAME}/data/redfin-sold-last-five-years/all_cleaned.csv')
     df_house.rename({'LATITUDE': 'lat', 'LONGITUDE': 'lon'}, axis=1, inplace=True)
     df_house=df_house.dropna(subset=['BEDS', 'PROPERTY TYPE'])
@@ -360,18 +343,8 @@ def main():
     
     city_name = display_city_filter(df_house)
     display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
-    #Display Metrics
-    st.subheader(f'{city_name} {property_type} Housing Facts')
-    st.write(f'for #beds ranges from {min_bed} to {max_bed} and #baths ranges from {min_bath} to {max_bath} from {start_month}/{year} to {end_month}/{year}')
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Selected City', string_format='${:,}')
-    with col2:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Ave $/Sqaure Feet', string_format='${:,}', is_price=T)
-    with col3:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Total # Sales', string_format='${:,}', is_sales=T)
-    
+    #Display Trend Analysis
     st.subheader('Price change analysis by cities')
     cities = display_multi_city_filter(df_house)
     city_price_by_time,city_price_change_5year,city_price_change_3year = price_by_time(df_house,cities)
@@ -384,7 +357,6 @@ def main():
     prediction_box = st.sidebar.checkbox('prediction')
     if prediction_box:
         components.iframe('http://127.0.0.1:5000', height=900, scrolling=True)
-
 
 if __name__ == "__main__":
     main()
