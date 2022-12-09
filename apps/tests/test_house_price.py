@@ -14,7 +14,7 @@ from city_house import monthly_house_price_tendency
 from city_house import house_price_change_from_highest_to_now_5years
 from city_house import house_price_change_from_highest_to_now_3years
 from city_house import price_map
-from city_house import main
+#from city_house import main
 
 class TestKnn(unittest.TestCase):
 

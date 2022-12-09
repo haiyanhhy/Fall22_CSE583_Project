@@ -19,12 +19,12 @@ def display_time_filters(df):
     #year_list.sort()
     year_list = [2017, 2018, 2019, 2020, 2021, 2022]
     year = st.sidebar.selectbox('Sold Year', year_list, len(year_list)-1)
-    start_month, end_month = st.select_slider(
+    start_month, end_month = st.sidebar.select_slider(
         'Select a range of months',
         options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         value=(1, 2))
-    st.write('Sold between', start_month,'/',year, 'and', end_month,'/',year)
-    st.header(f'{year} month {start_month}-{end_month}')
+    st.write(f'Change year and range of months in sidebar')
+    st.subheader(f'Houses sold between {start_month}/{year} and {end_month}/{year}')
     return year, start_month, end_month
 
 def display_city_filter(df):
@@ -33,7 +33,7 @@ def display_city_filter(df):
     """
     city_list = [''] + list(df['CITY'].unique())
     #city_index = city_list.index(city_name) if city_name and city_name in city_list else 0
-    city_name = st.sidebar.selectbox('City', city_list, len(city_list)-1)
+    city_name = st.sidebar.selectbox('City', city_list, index=2)
     return city_name
 
 def display_city_multi_filter(df):
@@ -49,7 +49,7 @@ def display_bed_filters(df):
     #top_bed=df['BEDS'].max()
     bed_list = list(range(0,100))
     min_bed, max_bed = st.select_slider(
-        'Select a range of bedrooms',
+        '#BEDS',
         options=bed_list,
         value=(1, 3))
     return min_bed, max_bed
@@ -58,7 +58,7 @@ def display_bath_filters(df):
     #top_bath=df['BATHS'].max()
     bath_list = list(range(0,300))
     min_bath, max_bath = st.select_slider(
-        'Select a range of bathrooms',
+        '#BATHS',
         options=bath_list,
         value=(1, 3))
     return min_bath, max_bath
@@ -69,13 +69,13 @@ def display_property_type_filter(df):
     """
     property_type_list = [''] + list(df['PROPERTY TYPE'].unique())
     #property_type_index = property_type_list.index(property_type) if property_type and property_type in property_type else 0
-    property_type = st.sidebar.radio('Property Type', property_type_list, len(property_type_list)-1)
+    property_type = st.sidebar.radio('Property Type (option 1 selects all types)', property_type_list, index=1)
     return property_type
 
 def display_map(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath):
     # define lat, long for points
     midpoint = (np.average(df['lat']), np.average(df['lon']))
-    map = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=8, scrollWheelZoom=False, tiles='CartoDB positron')
+    map = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=10, scrollWheelZoom=False, tiles='CartoDB positron')
 
     df2 = df.groupby(['CITY'])['$/SQUARE FEET'].size().reset_index(name='count')
     df3 = df.groupby(['CITY'])['$/SQUARE FEET'].mean().reset_index(name='mean')
@@ -122,7 +122,9 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     for i in range(0, len(df)):
         folium.Marker(
             location=[df.iloc[i]['lat'], df.iloc[i]['lon']],
-            popup=df.iloc[i]['LOCATION']
+            radius=2, 
+            tooltip=f"<b>Location: {df.iloc[i]['LOCATION']}</b><br><br>Zip Code: {df.iloc[i]['ZIP OR POSTAL CODE']}",
+            icon=folium.Icon(color='organge', icon='home')
         ).add_to(map)
 
     st_map = st_folium(map, width=700, height=450)
@@ -133,18 +135,6 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     
     return 
 
-def display_house_facts(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, title, string_format='${:,}', is_prediction=False):
-    df = df[(df['SOLD YEAR'] == year) & (df['SOLD MONTH_Number'] >= start_month) & (df['SOLD MONTH_Number'] <= end_month)]
-    df = df[(df['BEDS'] >= min_bed) & (df['BEDS'] <= max_bed)]
-    df = df[(df['BATHS'] >= min_bath) & (df['BATHS'] <= max_bath)]
-    if city_name:
-        df = df[df['CITY'] == city_name]
-    if property_type:
-        df = df[df['PROPERTY TYPE'] == property_type]
-    df.drop_duplicates(inplace=True)
-    ave_price = df['$/SQUARE FEET'].sum() / len(df['$/SQUARE FEET']) if len(df) else 0
-    total_sale = df['$/SQUARE FEET'].count()
-    st.metric(title, string_format.format(round(ave_price)), string_format.format(round(total_sale)))
 
 ## define a multiselection bar for cities
 def display_multi_city_filter(df):
@@ -341,8 +331,15 @@ def main():
     #Display Filters and Map
     year, start_month, end_month = display_time_filters(df_house)
     property_type = display_property_type_filter(df_house)
-    min_bed, max_bed = display_bed_filters(df_house)
-    min_bath, max_bath = display_bath_filters(df_house)
+    
+    st.write(f'Select number of bedrooms and bathrooms')
+
+    col1, col2 = st.columns(2)
+    with col1:
+        min_bed, max_bed = display_bed_filters(df_house)
+    with col2:
+        min_bath, max_bath = display_bath_filters(df_house)
+    
     city_name = display_city_filter(df_house)
     display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
 
@@ -353,19 +350,6 @@ def main():
     st.plotly_chart(house_price_change_from_highest_to_now_5years(city_price_change_5year))
     st.plotly_chart(house_price_change_from_highest_to_now_3years(city_price_change_3year))
     price_map(df_house)
-
-    #Display Metrics
-    st.subheader(f'{city_name} {property_type} Housing Facts')
-    st.write(f'for #beds ranges from {min_bed} to {max_bed} and #baths ranges from {min_bath} to {max_bath} from {start_month}/{year} to {end_month}/{year}')
-
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Selected City', string_format='${:,}')
-    with col2:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Ave $/Sqaure Feet', string_format='${:,}')
-    with col3:
-        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Total # Sales', string_format='${:,}')        
-
-
+    
 if __name__ == "__main__":
     main()

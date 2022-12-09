@@ -132,3 +132,5 @@ dmypy.json
 data/.DS_Store
 run_app.py
 apps/schooldistrict.py
+data/.DS_Store
+apps/prediction.py
