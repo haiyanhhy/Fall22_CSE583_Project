@@ -159,7 +159,7 @@ def display_multi_city_filter(df):
     st.write('You selected:', cities)
     return cities
 
-## def function for monthly_house_price_tendency(now it can only show ten popular cities.)
+## def function for display_monthly_house_price_tendency(now it can only show ten popular cities.)
 def price_by_time(df,cities):
     filtered_house_data = df[df["CITY"].isin(cities)]
     filtered_house_data = filtered_house_data[~filtered_house_data["SQUARE FEET"].isna()]
@@ -191,7 +191,7 @@ def price_by_time(df,cities):
 
     return city_price_by_time,city_price_change_5year,city_price_change_3year
 
-def monthly_house_price_tendency(df,property_type,city_price_by_time):
+def display_monthly_house_price_tendency(df,property_type,city_price_by_time):
     df = df[df["PROPERTY TYPE"]== property_type ]
 
     fig = px.line(
@@ -211,7 +211,7 @@ def monthly_house_price_tendency(df,property_type,city_price_by_time):
     )
     return fig
 
-def house_price_change_from_highest_to_now_5years(city_price_change_5year):
+def display_change_from_highest_to_now(city_price_change_5year):
     # plot the price change
     fig = px.bar(
         city_price_change_5year.round(2),
@@ -231,7 +231,7 @@ def house_price_change_from_highest_to_now_5years(city_price_change_5year):
     )
     return fig
 
-def house_price_change_from_highest_to_now_3years(city_price_change_3year):
+def display_change_from_covid_to_now(city_price_change_3year):
 # plot the price change
     fig = px.bar(
         city_price_change_3year.round(2),
@@ -252,7 +252,7 @@ def house_price_change_from_highest_to_now_3years(city_price_change_3year):
     return fig
 
 
-def price_map(df):
+def display_price_map(df):
     filtered_house_data = df[df["CITY"].isin([
     "Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton", 
     "Sammamish", "Issaquah",
@@ -358,11 +358,11 @@ def main():
     cities = display_multi_city_filter(df_house)
     city_price_by_time,city_price_change_5year,city_price_change_3year = price_by_time(df_house,cities)
     st.write(f'Interact with the plot: \n feel free to download, zoom in, zoom out, make it full screen or hide some lines.')
-    st.plotly_chart(monthly_house_price_tendency(df_house,property_type,city_price_by_time))
-    st.plotly_chart(house_price_change_from_highest_to_now_5years(city_price_change_5year))
-    st.plotly_chart(house_price_change_from_highest_to_now_3years(city_price_change_3year))
+    st.plotly_chart(display_monthly_house_price_tendency(df_house,property_type,city_price_by_time))
+    st.plotly_chart(display_change_from_highest_to_now(city_price_change_5year))
+    st.plotly_chart(display_change_from_covid_to_now(city_price_change_3year))
     st.subheader('Current price for each zip code in popular cities')
-    price_map(df_house)
+    display_price_map(df_house)
     st.subheader('If you are a home builder,feel free to click the "prediction" button in the sidebar')
     
 
