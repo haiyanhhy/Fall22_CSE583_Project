@@ -10,7 +10,7 @@ def prediction():
 
    #loading the model
 
-   with open('/Users/xuqinghu/Desktop/homework/Fall22_CSE583_Project-main/apps/Price_Model','rb') as f:
+   with open('./ML_model/Price_Model','rb') as f:
       model=pickle.load(f)
 
 

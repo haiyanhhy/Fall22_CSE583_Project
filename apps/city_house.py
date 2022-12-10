@@ -134,7 +134,7 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
             location=[df.iloc[i]['lat'], df.iloc[i]['lon']],
             radius=2, 
             tooltip=f"<b>Location: {df.iloc[i]['LOCATION']}</b><br><br>Zip Code: {df.iloc[i]['ZIP OR POSTAL CODE']}",
-            icon=folium.Icon(color='organge', icon='home')
+            icon=folium.Icon(color='orange', icon='home')
         ).add_to(map)
 
     st_map = st_folium(map, width=700, height=450)
