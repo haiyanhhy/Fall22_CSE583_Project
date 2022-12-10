@@ -1,8 +1,3 @@
-"""
-This is a script making a web app to show interactive analysis 
-for Seattle Metro Area Housing Prices
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -11,13 +6,9 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from streamlit_folium import st_folium
 import sys, os
-from prediction_app import prediction
-import streamlit.components.v1 as components
-DIRNAME = os.path.abspath(__file__ + "/../../")
 
-APP_TITLE = 'Seattle Metro Area Housing Prices'
-APP_SUB_TITLE = 'Source: Radfin https://www.redfin.com/city/16163/WA/Seattle/filter/viewport=47.93252:47.29375:-121.83461:-123.42076,no-outline' 
-APP_SUB_TITLE2 = 'Data updated: Oct.2022' 
+APP_TITLE = 'Seattle Metropolitan Area Housing Prices'
+APP_SUB_TITLE = 'Source: Redfin' # Need to further specify datasource
 
 def display_time_filters(df):
     """
@@ -28,12 +19,12 @@ def display_time_filters(df):
     #year_list.sort()
     year_list = [2017, 2018, 2019, 2020, 2021, 2022]
     year = st.sidebar.selectbox('Sold Year', year_list, len(year_list)-1)
-    start_month, end_month = st.sidebar.select_slider(
+    start_month, end_month = st.select_slider(
         'Select a range of months',
         options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         value=(1, 2))
-    st.write(f'Change year and range of months in sidebar')
-    st.subheader(f'Houses sold between {start_month}/{year} and {end_month}/{year}')
+    st.write('Sold between', start_month,'/',year, 'and', end_month,'/',year)
+    st.header(f'{year} month {start_month}-{end_month}')
     return year, start_month, end_month
 
 def display_city_filter(df):
@@ -42,7 +33,7 @@ def display_city_filter(df):
     """
     city_list = [''] + list(df['CITY'].unique())
     #city_index = city_list.index(city_name) if city_name and city_name in city_list else 0
-    city_name = st.sidebar.selectbox('City', city_list, index=2)
+    city_name = st.sidebar.selectbox('City', city_list, len(city_list)-1)
     return city_name
 
 def display_city_multi_filter(df):
@@ -58,7 +49,7 @@ def display_bed_filters(df):
     #top_bed=df['BEDS'].max()
     bed_list = list(range(0,100))
     min_bed, max_bed = st.select_slider(
-        '#BEDS',
+        'Select a range of bedrooms',
         options=bed_list,
         value=(1, 3))
     return min_bed, max_bed
@@ -67,7 +58,7 @@ def display_bath_filters(df):
     #top_bath=df['BATHS'].max()
     bath_list = list(range(0,300))
     min_bath, max_bath = st.select_slider(
-        '#BATHS',
+        'Select a range of bathrooms',
         options=bath_list,
         value=(1, 3))
     return min_bath, max_bath
@@ -78,13 +69,13 @@ def display_property_type_filter(df):
     """
     property_type_list = [''] + list(df['PROPERTY TYPE'].unique())
     #property_type_index = property_type_list.index(property_type) if property_type and property_type in property_type else 0
-    property_type = st.sidebar.radio('Property Type (option 1 selects all types)', property_type_list, index=1)
+    property_type = st.sidebar.radio('Property Type', property_type_list, len(property_type_list)-1)
     return property_type
 
 def display_map(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath):
     # define lat, long for points
     midpoint = (np.average(df['lat']), np.average(df['lon']))
-    map = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=10, scrollWheelZoom=False, tiles='CartoDB positron')
+    map = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=8, scrollWheelZoom=False, tiles='CartoDB positron')
 
     df2 = df.groupby(['CITY'])['$/SQUARE FEET'].size().reset_index(name='count')
     df3 = df.groupby(['CITY'])['$/SQUARE FEET'].mean().reset_index(name='mean')
@@ -96,7 +87,6 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     DIRNAME = os.path.abspath(__file__ + "/../../")
     #Map base use city boundaries and display info
     choropleth = folium.Choropleth(
-        #geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
         geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
         data=df,
         columns=('CITY', 'mean'),
@@ -132,30 +122,40 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     for i in range(0, len(df)):
         folium.Marker(
             location=[df.iloc[i]['lat'], df.iloc[i]['lon']],
-            radius=2, 
-            tooltip=f"<b>Location: {df.iloc[i]['LOCATION']}</b><br><br>Zip Code: {df.iloc[i]['ZIP OR POSTAL CODE']}",
-            icon=folium.Icon(color='organge', icon='home')
+            popup=df.iloc[i]['LOCATION']
         ).add_to(map)
 
     st_map = st_folium(map, width=700, height=450)
     
-    return  df
+    city_name = 'Seattle'
+    if st_map['last_active_drawing']:
+        city_name = st_map['last_active_drawing']['properties']['CityName']
+    
+    return 
 
-## define a multiselection bar for top 10 price change cities
+def display_house_facts(df, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, title, string_format='${:,}', is_prediction=False):
+    df = df[(df['SOLD YEAR'] == year) & (df['SOLD MONTH_Number'] >= start_month) & (df['SOLD MONTH_Number'] <= end_month)]
+    df = df[(df['BEDS'] >= min_bed) & (df['BEDS'] <= max_bed)]
+    df = df[(df['BATHS'] >= min_bath) & (df['BATHS'] <= max_bath)]
+    if city_name:
+        df = df[df['CITY'] == city_name]
+    if property_type:
+        df = df[df['PROPERTY TYPE'] == property_type]
+    df.drop_duplicates(inplace=True)
+    ave_price = df['$/SQUARE FEET'].sum() / len(df['$/SQUARE FEET']) if len(df) else 0
+    total_sale = df['$/SQUARE FEET'].count()
+    st.metric(title, string_format.format(round(ave_price)), string_format.format(round(total_sale)))
+
+## define a multiselection bar for cities
 def display_multi_city_filter(df):
     """
-    mulit select cities
+    mulit select city 
     """
     cities = st.multiselect(
-        'Select the cities you are interested',
-        [ "Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton", 
+        'Select the cities',
+        ["Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton", 
         "Sammamish", "Issaquah",
-        "Bothell", "Woodinville", 
-        "Kenmore", 
-        "Shoreline", "Lynnwood", 
-        "Yarrow Point", "Clyde Hill", "Medina", "Mercer Island", 
-        "Kent", "Auburn", "Federal Way", "Tacoma", 
-        "Inglewood-Finn Hill",  "Lake Forest Park", "Lake Stevens", "Maple Valley"])
+        "Bothell", "Woodinville"])
     st.write('You selected:', cities)
     return cities
 
@@ -206,8 +206,8 @@ def monthly_house_price_tendency(df,property_type,city_price_by_time):
         # center the title
         title_x=0.5,
         # set the figure size
-        width=700, 
-        height=450
+        width=1000,
+        height=600,
     )
     return fig
 
@@ -226,8 +226,8 @@ def house_price_change_from_highest_to_now_5years(city_price_change_5year):
         # center the title
         title_x=0.5,
         # set the figure size
-        width=700,
-        height=450,
+        width=1000,
+        height=600,
     )
     return fig
 
@@ -246,8 +246,8 @@ def house_price_change_from_highest_to_now_3years(city_price_change_3year):
         # center the title
         title_x=0.5,
         # set the figure size
-        width=700,
-        height=450,
+        width=1000,
+        height=600,
     )
     return fig
 
@@ -283,8 +283,7 @@ def price_map(df):
     bins = list(zip_prices["PRICE"].quantile([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]))
 
     cp = folium.Choropleth(
-        geo_data=f'{DIRNAME}/data/wa_washington_zip_codes_geo.min.json',
-        #geo_data='/Users/xuqinghu/Desktop/homework/Fall22_CSE583_Project-main/data/wa_washington_zip_codes_geo.min.json',
+        geo_data="data/wa_washington_zip_codes_geo.min.json",
         name="choropleth",
         data=zip_prices,
         columns=["ZIP OR POSTAL CODE", "PRICE"],
@@ -321,17 +320,19 @@ def price_map(df):
     ).add_to(cp.geojson)
 
     folium.LayerControl().add_to(m)
-    st_m = st_folium(m,width=700, height=450)
+    st_m = st_folium(m)
     return st_m
+
 
 
 def main():
     st.set_page_config(APP_TITLE)
     st.title(APP_TITLE)
     st.caption(APP_SUB_TITLE)
-    st.caption(APP_SUB_TITLE2)
+
 
     #Load Data
+    DIRNAME = os.path.abspath(__file__ + "/../../")
     df_house=pd.read_csv (f'{DIRNAME}/data/redfin-sold-last-five-years/all_cleaned.csv')
     df_house.rename({'LATITUDE': 'lat', 'LONGITUDE': 'lon'}, axis=1, inplace=True)
     df_house=df_house.dropna(subset=['BEDS', 'PROPERTY TYPE'])
@@ -340,35 +341,31 @@ def main():
     #Display Filters and Map
     year, start_month, end_month = display_time_filters(df_house)
     property_type = display_property_type_filter(df_house)
-    
-    st.write(f'Select number of bedrooms and bathrooms')
-
-    col1, col2 = st.columns(2)
-    with col1:
-        min_bed, max_bed = display_bed_filters(df_house)
-    with col2:
-        min_bath, max_bath = display_bath_filters(df_house)
-    
+    min_bed, max_bed = display_bed_filters(df_house)
+    min_bath, max_bath = display_bath_filters(df_house)
     city_name = display_city_filter(df_house)
     display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
 
-    #Display Trend Analysis
     st.subheader('Price change analysis by cities')
-    st.write(f'You can change the propery type in side bar and muti-select cities here')
     cities = display_multi_city_filter(df_house)
     city_price_by_time,city_price_change_5year,city_price_change_3year = price_by_time(df_house,cities)
-    st.write(f'Interact with the plot: \n feel free to download, zoom in, zoom out, make it full screen or hide some lines.')
     st.plotly_chart(monthly_house_price_tendency(df_house,property_type,city_price_by_time))
     st.plotly_chart(house_price_change_from_highest_to_now_5years(city_price_change_5year))
     st.plotly_chart(house_price_change_from_highest_to_now_3years(city_price_change_3year))
-    st.subheader('Current price for each zip code in popular cities')
     price_map(df_house)
-    st.subheader('If you are a home builder,feel free to click the "prediction" button in the sidebar')
-    
 
-    prediction_box = st.sidebar.checkbox('prediction')
-    if prediction_box:
-        components.iframe('http://127.0.0.1:5000', height=900, scrolling=True)
+    #Display Metrics
+    st.subheader(f'{city_name} {property_type} Housing Facts')
+    st.write(f'for #beds ranges from {min_bed} to {max_bed} and #baths ranges from {min_bath} to {max_bath} from {start_month}/{year} to {end_month}/{year}')
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Selected City', string_format='${:,}')
+    with col2:
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Ave $/Sqaure Feet', string_format='${:,}')
+    with col3:
+        display_house_facts(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath, 'Total # Sales', string_format='${:,}')        
+
 
 if __name__ == "__main__":
     main()
