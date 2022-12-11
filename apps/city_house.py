@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from streamlit_folium import st_folium
 import sys, os
-from prediction_app import prediction
+#To successfully import prediction_app
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from apps.prediction_app import prediction
 import streamlit.components.v1 as components
 DIRNAME = os.path.abspath(__file__ + "/../../")
 
@@ -159,7 +161,7 @@ def display_multi_city_filter(df):
     st.write('You selected:', cities)
     return cities
 
-## def function for display_monthly_house_price_tendency(now it can only show ten popular cities.)
+## def function for display_monthly_house_price_tendency
 def price_by_time(df,cities):
     filtered_house_data = df[df["CITY"].isin(cities)]
     filtered_house_data = filtered_house_data[~filtered_house_data["SQUARE FEET"].isna()]
