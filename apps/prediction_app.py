@@ -14,11 +14,9 @@ def prediction():
       model=pickle.load(f)
 
 
-
    @app.route('/')
    def home():
       return render_template('index.html')
-
 
 
    @app.route('/',methods=['POST'])
@@ -50,7 +48,7 @@ def prediction():
          query_SQUARE_FEET=int(request.form['SQUARE_FEET'])
          query_LOCATION=request.form['LOCATION']# multipul-selection
          query_PROPERTY_TYPE=request.form['PROPERTY_TYPE']# multipul-selection
-            
+
          #For renovation condition
          if query_SOLD_YEAR=="SOLD_YEAR_1": # 2017
             SOLD_YEAR = 2017
@@ -64,7 +62,7 @@ def prediction():
             SOLD_YEAR = 2021
          else:                 # SOLD_YEAR_6  # 2022
             SOLD_YEAR = 2022
-            
+
          if SOLD_YEAR<query_YEAR_BUILT:
             return render_template('index.html')
 
@@ -74,10 +72,10 @@ def prediction():
          # For PROPERTY TYPE
          PROPERTY_TYPE = int(query_PROPERTY_TYPE.split('_')[-1])
 
-         model_data=[[query_SOLD_MONTH_Number, query_SOLD_DATE_DAY, SOLD_YEAR, 
-                        PROPERTY_TYPE, query_BEDS, query_BATHS, 
+         model_data=[[query_SOLD_MONTH_Number, query_SOLD_DATE_DAY, SOLD_YEAR,
+                        PROPERTY_TYPE, query_BEDS, query_BATHS,
                         query_SQUARE_FEET, query_LOT_SIZE, query_YEAR_BUILT,LOCATION]]
-         
+
          result=model.predict(model_data)
 
          x=float(result)
@@ -86,15 +84,9 @@ def prediction():
       except ValueError as v:
          print(v)
          return render_template('index.html')
-   
+
    return app
-      
+
 
 if __name__=="__main__":
    prediction().run()
-
-
-
-
-
-
