@@ -13,7 +13,6 @@ from streamlit_folium import st_folium
 import sys, os
 #To successfully import prediction_app
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from apps.prediction_app import prediction
 import streamlit.components.v1 as components
 DIRNAME = os.path.abspath(__file__ + "/../../")
 
@@ -367,7 +366,6 @@ def main():
     display_price_map(df_house)
     st.subheader('If you are a home builder,feel free to click the "prediction" button in the sidebar')
     
-
     prediction_box = st.sidebar.checkbox('prediction')
     if prediction_box:
         components.iframe('http://127.0.0.1:5000', height=900, scrolling=True)
