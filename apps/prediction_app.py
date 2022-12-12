@@ -6,7 +6,6 @@ import os
 DIRNAME = os.path.abspath(__file__ + "/../")
 
 
-
 app=Flask(__name__)
 
 #loading the model
