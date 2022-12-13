@@ -17,7 +17,7 @@ import streamlit.components.v1 as components
 DIRNAME = os.path.abspath(__file__ + "/../../")
 
 APP_TITLE = 'Seattle Metro Area Housing Prices'
-APP_SUB_TITLE = 'Source: Radfin https://www.redfin.com/city/16163/WA/Seattle/filter/viewport=47.93252:47.29375:-121.83461:-123.42076,no-outline' 
+APP_SUB_TITLE = 'Source: Redfin https://www.redfin.com/city/16163/WA/Seattle/filter/viewport=47.93252:47.29375:-121.83461:-123.42076,no-outline' 
 APP_SUB_TITLE2 = 'Data updated: Oct.2022' 
 
 def display_time_filters(df):
