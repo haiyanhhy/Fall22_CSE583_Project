@@ -2,17 +2,16 @@ name: project_env
 channels:
   - defaults
 dependencies:
-  - matplotlib-inline=0.1.6=py310hecd8cb5_0
-  - numexpr=2.8.4=py310h9638375_0
-  - numpy=1.23.4=py310h9638375_0
-  - numpy-base=1.23.4=py310ha98c3c9_0
-  - pandas=1.5.1=py310h3ea8b11_0
-  - pip=22.2.2=py310hecd8cb5_0
-  - prompt-toolkit=3.0.20=pyhd3eb1b0_0
-  - pydeck=0.7.1=py310hecd8cb5_0
-  - pympler=0.9=py_0
-  - python=3.10.8=h218abb5_1
-  - streamlit=1.11.0=py310hecd8cb5_0
+  - matplotlib-inline==0.1.6=py310hecd8cb5_0
+  - numexpr==2.8.4=py310h9638375_0
+  - numpy==1.23.4=py310h9638375_0
+  - numpy-base==1.23.4=py310ha98c3c9_0
+  - pandas==1.5.1=py310h3ea8b11_0
+  - prompt-toolkit==3.0.20=pyhd3eb1b0_0
+  - pydeck==0.7.1=py310hecd8cb5_0
+  - pympler==0.9=py_0
+  - python==3.10.8=h218abb5_1
+  - streamlit==1.11.0=py310hecd8cb5_0
   - pip:
     - folium==0.13.0
     - matplotlib==3.6.2
