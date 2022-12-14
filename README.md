@@ -8,6 +8,15 @@ Our project provides an interactive dashboard & open-source tool for house buyer
 (Haiyan + Xuqing)
 Others to review our own workstream
 
+To follow this project, please install the following locally:
+
+JupyerLab
+Python 3.8+
+Python packages
+pandas
+yfinance
+scikit-learn
+
 # Main technology used:
 Python, Streamlit, Folium, Flask, HTML, Plotly, Matplobib
 
