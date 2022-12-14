@@ -26,6 +26,10 @@ yfinance
 scikit-learn    
 (we are supposed to install everything in visual env instead of asking users to install on their local drive)
 
+Notice: 
+1.It may take some time loading the website page and the visualization boards, please be patient :D
+2.When playing with the 'Price change analysis by cities' part, you should first choose the cities you are interested in the mult-selection bar, then the graphs will display successfully.
+
 # Main technology used:
 [![Python Package using Conda](https://github.com/haiyanhhy/Fall22_CSE583_Project/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/haiyanhhy/Fall22_CSE583_Project/actions/workflows/python-package-conda.yml)
 
