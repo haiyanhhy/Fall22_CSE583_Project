@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import unittest
-import sys, os
+import os
 
 from apps.city_house import display_time_filters
 from apps.city_house import display_city_filter
@@ -21,9 +21,9 @@ print(DIRNAME)
 
 # Import house price data
 df_house = pd.read_csv(f"{DIRNAME}/data/redfin-sold-last-five-years/all_cleaned.csv")
-df_house.rename({"LATITUDE": "lat", "LONGITUDE": "lon"}, axis = 1, inplace = True)
-df_house = df_house.dropna(subset = ["BEDS", "PROPERTY TYPE"])
-df_house = df_house.reset_index(drop = True)
+df_house.rename({"LATITUDE": "lat", "LONGITUDE": "lon"}, axis=1, inplace=True)
+df_house = df_house.dropna(subset=["BEDS", "PROPERTY TYPE"])
+df_house = df_house.reset_index(drop=True)
 
 
 class Testcity_house(unittest.TestCase):
@@ -151,7 +151,7 @@ class Testcity_house(unittest.TestCase):
         and the city_price_by_time data is for Seattle
         """
         city_price_by_time, city_price_change_5year, city_price_change_3year = price_by_time(df_house, ["Seattle"])
-        display_monthly_house_price_tendency(df_house,"Single Family Residential", city_price_by_time)
+        display_monthly_house_price_tendency(df_house, "Single Family Residential", city_price_by_time)
         display_change_from_highest_to_now(city_price_change_5year)
         display_change_from_covid_to_now(city_price_change_3year)
         return
@@ -163,13 +163,13 @@ class Testcity_house(unittest.TestCase):
         on the graph two and three, it shows the price change of city we selected
         this test tests whether is could display the correct multiple cities
         """
-        cities = ["Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton", 
+        cities = ["Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton",
                    "Sammamish", "Issaquah",
-                   "Bothell", "Woodinville", 
-                   "Kenmore", 
-                   "Shoreline", "Lynnwood", 
-                   "Yarrow Point", "Clyde Hill", "Medina", "Mercer Island", 
-                   "Kent", "Auburn", "Federal Way", "Tacoma", 
+                   "Bothell", "Woodinville",
+                   "Kenmore",
+                   "Shoreline", "Lynnwood",
+                   "Yarrow Point", "Clyde Hill", "Medina", "Mercer Island",
+                   "Kent", "Auburn", "Federal Way", "Tacoma",
                    "Inglewood-Finn Hill",  "Lake Forest Park", "Lake Stevens", "Maple Valley"]
         city_price_by_time, city_price_change_5year, city_price_change_3year = price_by_time(df_house, cities)
         display_monthly_house_price_tendency(df_house, "Single Family Residential", city_price_by_time)
@@ -192,7 +192,8 @@ class Testcity_house(unittest.TestCase):
         It will also need ["PRICE_PER_SQFT"] ["PRICE"] to do calculation
         So this test is for necessary column checks, if not raise an ValueError
         """
-        necessary_columns = ["YEAR","PROPERTY TYPE","CITY","ZIP OR POSTAL CODE","PRICE","SQUARE FEET","lat","lon"]
+        necessary_columns = ["YEAR", "PROPERTY TYPE", "CITY", "ZIP OR POSTAL CODE",
+                             "PRICE","SQUARE FEET", "lat", "lon"]
 
         count = 0
         for item in necessary_columns:
@@ -207,7 +208,7 @@ class Testcity_house(unittest.TestCase):
 
     def test_miss_column_for_display_price_map(self):
         """
-        edge test for necessary columns to display the price map 
+        edge test for necessary columns to display the price map
         So this test is for necessary column checks, at least we need those 8 columns below, if not raise an ValueError
         """
         necessary_columns = ["YEAR", "PROPERTY TYPE", "CITY", "ZIP OR POSTAL CODE", "PRICE", "SQUARE FEET", "lat", "lon"]
