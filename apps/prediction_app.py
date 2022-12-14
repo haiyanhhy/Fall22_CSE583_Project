@@ -13,12 +13,12 @@ with open(f'{DIRNAME}/ML_model/Price_Model', 'rb') as f:
    model = pickle.load(f)
 
 
-@app.route('/')
+   @app.route('/')
    def home():
       return render_template('index.html')
 
 
-@app.route('/', methods=['POST'])
+   @app.route('/', methods=['POST'])
    def predict():
       try:
          """
