@@ -123,7 +123,7 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
         folium.Marker(
             location=[df.iloc[i]['lat'], df.iloc[i]['lon']],
             radius=2,
-            tooltip=f"<b>Location: {df.iloc[i]['LOCATION']}</b><br><br>Zip Code: {df.iloc[i]['ZIP OR POSTAL CODE']}",
+            tooltip=f"<b>Location: {df.iloc[i]['LOCATION']}</b><br><br>Zip Code: {df.iloc[i]['ZIP OR POSTAL CODE']}</b><br><br>Pirce: ${df.iloc[i]['PRICE']}</b><br><br>{df.iloc[i]['BEDS']}B{df.iloc[i]['BATHS']}B",
             icon=folium.Icon(color='orange', icon='home')
         ).add_to(map)
 
