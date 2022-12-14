@@ -16,8 +16,11 @@ Python packages
 pandas
 yfinance
 scikit-learn
+(we are supposed to install everything in visual env instead of asking users to install on their local drive)
 
 # Main technology used:
+[![Python Package using Conda](https://github.com/haiyanhhy/Fall22_CSE583_Project/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/haiyanhhy/Fall22_CSE583_Project/actions/workflows/python-package-conda.yml)
+
 Python, Streamlit, Folium, Flask, HTML, Plotly, Matplobib
 
 # Data Source
