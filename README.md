@@ -13,16 +13,6 @@ Our project provides an interactive dashboard & open-source tool for house buyer
 **streamlit run apps/city_house.py**  
 the streamlit visualization board will automatically popup in your the web browser  
 
-To follow this project, please install the following locally:
-
-JupyerLab
-Python 3.8+
-Python packages
-pandas
-yfinance
-scikit-learn    
-(we are supposed to install everything in visual env instead of asking users to install on their local drive)
-
 Notice: \
 1.It may take some time loading the website page and the visualization boards, please be patient :D \
 2.When playing with the 'Price change analysis by cities' part, you should first choose the cities you are interested in the mult-selection bar, then the graphs will display successfully.
