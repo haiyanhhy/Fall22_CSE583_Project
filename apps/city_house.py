@@ -249,7 +249,8 @@ def display_price_map(df):
                                               "Sammamish", "Issaquah", "Bothell", "Woodinville", "Kenmore", "Shoreline",
                                               "Lynnwood", "Yarrow Point", "Clyde Hill", "Medina", "Mercer Island",
                                               # "Kent", "Auburn", "Federal Way", "Tacoma",
-                                              # "Inglewood-Finn Hill",  "Lake Forest Park", "Lake Stevens", "Maple Valley"])]
+                                              # "Inglewood-Finn Hill",  "Lake Forest Park", "Lake Stevens", "Maple Valley"
+                                              ])]
     filtered_house_data = filtered_house_data[filtered_house_data["YEAR"] == 2022]
     filtered_house_data = filtered_house_data[~filtered_house_data["SQUARE FEET"].isna()]
     filtered_house_data = filtered_house_data[filtered_house_data["SQUARE FEET"] > 1500]
