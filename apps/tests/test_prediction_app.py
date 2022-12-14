@@ -1,10 +1,10 @@
 import unittest
 from flask import current_app
-from prediction_app import app
 import sys
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
+from prediction_app import app
 
 
 class BasicTestCase(unittest.TestCase):

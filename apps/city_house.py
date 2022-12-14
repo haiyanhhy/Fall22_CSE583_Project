@@ -17,8 +17,9 @@ import streamlit.components.v1 as components
 DIRNAME = os.path.abspath(__file__ + "/../../")
 
 APP_TITLE = 'Seattle Metro Area Housing Prices'
-APP_SUB_TITLE = 'Source: Redfin https://www.redfin.com/city/16163/WA/Seattle/filter/viewport=47.93252:47.29375:-121.83461:-123.42076,no-outline' 
-APP_SUB_TITLE2 = 'Data updated: Oct.2022' 
+APP_SUB_TITLE = 'Source: Redfin https://www.redfin.com/city/16163/WA/Seattle/filter/viewport=47.93252:47.29375:-121.83461:-123.42076,no-outline'
+APP_SUB_TITLE2 = 'Data updated: Oct.2022'
+
 
 def display_time_filters(df):
     """
@@ -29,8 +30,8 @@ def display_time_filters(df):
     year = st.sidebar.selectbox('Sold Year', year_list, len(year_list) - 1)
     start_month, end_month = st.sidebar.select_slider(
         'Select a range of months',
-        options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        value = (1, 2))
+        options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        value=(1, 2))
     st.write('Change year and range of months in sidebar')
     st.subheader(f'Houses sold between {start_month}/{year} and {end_month}/{year}')
     return year, start_month, end_month
@@ -68,7 +69,7 @@ def display_property_type_filter(df):
     single select proporty type
     """
     property_type_list = [''] + list(df['PROPERTY TYPE'].unique())
-    property_type = st.sidebar.radio('Property Type (option 1 selects all types)', property_type_list, index = 1)
+    property_type = st.sidebar.radio('Property Type (option 1 selects all types)', property_type_list, index=1)
     return property_type
 
 
@@ -86,12 +87,12 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
     DIRNAME = os.path.abspath(__file__ + "/../../")
     # Map base use city boundaries and display info
     choropleth = folium.Choropleth(
-        geo_data = f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
-        data = df,
-        columns = ('CITY', 'mean'),
-        key_on = 'feature.properties.CityName',
-        line_opacity = 0.8,
-        highlight = True
+        geo_data=f'{DIRNAME}/data/WSDOT_-_City_Limits.geojson',
+        data=df,
+        columns=('CITY', 'mean'),
+        key_on='feature.properties.CityName',
+        line_opacity=0.8,
+        highlight=True
     )
     choropleth.geojson.add_to(map)
 
@@ -103,7 +104,7 @@ def display_map(df, year, start_month, end_month, property_type, city_name, min_
         city = feature['properties']['CityName']
         feature['properties']['ave_sqft_price'] = 'AveSqftPrices: ' + str(round(df_indexed.loc[city, 'mean'])) if city in list(df_indexed.index) else 'Unknown'
         feature['properties']['total_sales'] = 'TotalSale: ' + str(df_indexed.loc[city, 'count']) if city in list(df_indexed.index) else 'Unknown'
-    
+
     choropleth.geojson.add_child(
         folium.features.GeoJsonTooltip(['CityName', 'ave_sqft_price', 'total_sales'], labels=False)
     )
@@ -148,6 +149,7 @@ def display_multi_city_filter(df):
     st.write('You selected:', cities)
     return cities
 
+
 # def function for display_monthly_house_price_tendency
 def price_by_time(df, cities):
     filtered_house_data = df[df["CITY"].isin(cities)]
@@ -157,10 +159,10 @@ def price_by_time(df, cities):
     city_price_by_time = filtered_house_data.groupby(["CITY", "YEAR_MONTH"])["PRICE_PER_SQFT"].median().reset_index().sort_values("PRICE_PER_SQFT", ascending=False).sort_values("YEAR_MONTH")
 
     temp = filtered_house_data.groupby(["CITY", "YEAR_MONTH"])["PRICE"].median().reset_index().sort_values("PRICE", ascending=False).sort_values("YEAR_MONTH")
-    city_price_by_time = city_price_by_time.merge(temp, on = ["CITY", "YEAR_MONTH"])
+    city_price_by_time = city_price_by_time.merge(temp, on=["CITY", "YEAR_MONTH"])
 
-    temp = filtered_house_data.groupby(["CITY", "YEAR_MONTH"]).size().reset_index().rename(columns = {0: "COUNT"})
-    city_price_by_time = city_price_by_time.merge(temp, on = ["CITY", "YEAR_MONTH"])
+    temp = filtered_house_data.groupby(["CITY", "YEAR_MONTH"]).size().reset_index().rename(columns={0: "COUNT"})
+    city_price_by_time = city_price_by_time.merge(temp, on=["CITY", "YEAR_MONTH"])
 
     city_price_highest_month \
         = city_price_by_time.groupby("CITY")["PRICE_PER_SQFT"].max().reset_index().sort_values("PRICE_PER_SQFT", ascending=False).rename(columns={"PRICE_PER_SQFT": "HIGHEST_PRICE"})
@@ -173,7 +175,7 @@ def price_by_time(df, cities):
 
     city_price_2019_10 = \
         city_price_by_time[city_price_by_time["YEAR_MONTH"] == "2019-10"][["CITY", "PRICE_PER_SQFT"]].rename(columns={"PRICE_PER_SQFT": "PRICE_2019_10"})
-    city_price_change_3year = pd.merge(city_price_change_5year, city_price_2019_10, on = "CITY")
+    city_price_change_3year = pd.merge(city_price_change_5year, city_price_2019_10, on="CITY")
     city_price_change_3year["PRICE_CHANGE_FROM_2019_10"] = city_price_change_3year["PRICE_2022_10"] - city_price_change_3year["PRICE_2019_10"]
     city_price_change_3year["PRICE_CHANGE_PERCENT_FROM_2019_10"] = city_price_change_3year["PRICE_CHANGE_FROM_2019_10"] / city_price_change_3year["PRICE_2019_10"]
     city_price_change_3year = city_price_change_3year.sort_values("PRICE_CHANGE_PERCENT_FROM_2019_10", ascending=True)
@@ -268,7 +270,7 @@ def display_price_map(df):
     m = folium.Map(location=[midpoint[0], midpoint[1]], zoom_start=8, scrollWheelZoom=False, tiles='CartoDB positron')
 
     # bins = list(zip_prices["PRICE"].quantile([0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 0.95, 0.99, 1]))
-    bins = list(zip_prices["PRICE"].quantile([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]))
+    # bins = list(zip_prices["PRICE"].quantile([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]))
 
     cp = folium.Choropleth(
         geo_data=f'{DIRNAME}/data/wa_washington_zip_codes_geo.min.json',
@@ -326,18 +328,18 @@ def main():
     year, start_month, end_month = display_time_filters(df_house)
     property_type = display_property_type_filter(df_house)
 
-    st.write(f'Select number of bedrooms and bathrooms')
+    st.write('Select number of bedrooms and bathrooms')
 
     col1, col2 = st.columns(2)
     with col1:
         min_bed, max_bed = display_bed_filters(df_house)
     with col2:
         min_bath, max_bath = display_bath_filters(df_house)
-    
+
     city_name = display_city_filter(df_house)
     display_map(df_house, year, start_month, end_month, property_type, city_name, min_bed, max_bed, min_bath, max_bath)
 
-    #Display Trend Analysis
+    # Display Trend Analysis
     st.subheader('Price change analysis by cities')
     st.write('You can change the propery type in side bar and muti-select cities here')
     cities = display_multi_city_filter(df_house)

@@ -41,7 +41,7 @@ all_data_lines = []
 lines_set = set()
 header_line = None
 for file in glob.glob("data/redfin-sold-last-five-years/*.csv"):
-    lines = [l.strip() for l in open(file, "r").readlines()]
+    lines = [x.strip() for x in open(file, "r").readlines()]
     if header_line is None:
         header_line = lines[0]
     else:
