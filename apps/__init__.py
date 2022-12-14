@@ -11,4 +11,4 @@ from apps.city_house import display_monthly_house_price_tendency
 from apps.city_house import display_change_from_highest_to_now
 from apps.city_house import display_change_from_covid_to_now
 from apps.city_house import display_price_map
-from prediction_app import app
+from apps.prediction_app import app
