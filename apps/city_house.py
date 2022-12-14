@@ -45,15 +45,6 @@ def display_city_filter(df):
     return city_name
 
 
-def display_city_multi_filter(df):
-    """
-    single select city from dropdown bar
-    """
-    city_list = [''] + list(df['CITY'].unique())
-    city_name = st.sidebar.selectbox('City', city_list, len(city_list) - 1)
-    return city_name
-
-
 def display_bed_filters(df):
     #top_bed=df['BEDS'].max()
     bed_list = list(range(0,100))

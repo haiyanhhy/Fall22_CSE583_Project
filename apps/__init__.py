@@ -1,6 +1,5 @@
 from apps.city_house import display_time_filters
 from apps.city_house import display_city_filter
-from apps.city_house import display_city_multi_filter
 from apps.city_house import display_bed_filters
 from apps.city_house import display_bath_filters
 from apps.city_house import display_property_type_filter
