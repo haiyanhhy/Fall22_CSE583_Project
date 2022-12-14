@@ -46,7 +46,7 @@ def predict():
       query_SQUARE_FEET = int(request.form['SQUARE_FEET'])
       query_LOCATION = request.form['LOCATION']  # multipul-selection
       query_PROPERTY_TYPE = request.form['PROPERTY_TYPE']  # multipul-selection
-      
+
       # For renovation condition
       if query_SOLD_YEAR == "SOLD_YEAR_1":  # 2017
          SOLD_YEAR = 2017
@@ -54,13 +54,13 @@ def predict():
          SOLD_YEAR = 2018
       elif query_SOLD_YEAR == "SOLD_YEAR_3":  # 2019
          SOLD_YEAR = 2019
-      elif query_SOLD_YEAR == "SOLD_YEAR_4": # 2020
+      elif query_SOLD_YEAR == "SOLD_YEAR_4":  # 2020
          SOLD_YEAR = 2020
-      elif query_SOLD_YEAR == "SOLD_YEAR_5": # 2021
+      elif query_SOLD_YEAR == "SOLD_YEAR_5":  # 2021
          SOLD_YEAR = 2021
       else:                 # SOLD_YEAR_6  # 2022
          SOLD_YEAR = 2022
-      
+
       if SOLD_YEAR < query_YEAR_BUILT:
          return render_template('index.html')
 
