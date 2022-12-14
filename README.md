@@ -10,11 +10,11 @@ Others to review our own workstream
 
 (From Alex: Haiyan and Xuqing please check if this is the correct procedure). 
 use visual environment environment.yml run commands:  
-**python prediction_app.py**  
+**python apps/prediction_app.py**  
 open up a new terminal *without exiting* the previous process. 
 input in the new terminal:  
-**python city_house.py**   
-**streamlit run city_house.py**  
+**python apps/city_house.py**   
+**streamlit run apps/city_house.py**  
 the streamlit visualization board will automatically popup in your the web browser  
 
 To follow this project, please install the following locally:
