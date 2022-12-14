@@ -1,15 +1,8 @@
 # This is a file for initail data setting up, we can download data from Redfin by seperate URLs.
 # We need to preprocess and combine all the dataset together.
 
-
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import plotly.express as px
-import os
 import glob
-import re
-import random
 
 # generate the link for downloading the data
 for i in range(40814, 40878):
@@ -43,7 +36,7 @@ with open("data/redfin-sold-last-five-years/seattle.csv", "w") as fout:
     fout.write(header_line + "\n")
     fout.write("\n".join(seattle_data_lines))
 
-#merge all the dataset together
+# merge all the dataset together
 all_data_lines = []
 lines_set = set()
 header_line = None
