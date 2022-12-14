@@ -23,7 +23,7 @@ def categorise(row):
     elif row['PROPERTY TYPE RAW'] == 'Townhouse':
         return 'Townhouse'
     elif row['PROPERTY TYPE RAW'] == 'Mobile/Manufactured Home' or row['PROPERTY TYPE RAW'] == 'Ranch' or \
-    row['PROPERTY TYPE RAW'] == 'Timeshare' or row['PROPERTY TYPE RAW'] == 'Parking':
+         row['PROPERTY TYPE RAW'] == 'Timeshare' or row['PROPERTY TYPE RAW'] == 'Parking':
         return 'Business/Industry'
     elif row['PROPERTY TYPE RAW'] == 'Other' or row['PROPERTY TYPE RAW'] == 'Vacant Land':
         return 'Land/Other'
