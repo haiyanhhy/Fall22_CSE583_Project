@@ -164,13 +164,13 @@ class Testcity_house(unittest.TestCase):
         this test tests whether is could display the correct multiple cities
         """
         cities = ["Seattle", "Bellevue", "Redmond", "Kirkland", "Newcastle", "Renton",
-                 "Sammamish", "Issaquah",
-                 "Bothell", "Woodinville",
-                 "Kenmore",
-                 "Shoreline", "Lynnwood",
-                 "Yarrow Point", "Clyde Hill", "Medina", "Mercer Island",
-                 "Kent", "Auburn", "Federal Way", "Tacoma",
-                 "Inglewood-Finn Hill",  "Lake Forest Park", "Lake Stevens", "Maple Valley"]
+                  "Sammamish", "Issaquah",
+                  "Bothell", "Woodinville",
+                  "Kenmore",
+                  "Shoreline", "Lynnwood",
+                  "Yarrow Point", "Clyde Hill", "Medina", "Mercer Island",
+                  "Kent", "Auburn", "Federal Way", "Tacoma",
+                  "Inglewood-Finn Hill",  "Lake Forest Park", "Lake Stevens", "Maple Valley"]
         city_price_by_time, city_price_change_5year, city_price_change_3year = price_by_time(df_house, cities)
         display_monthly_house_price_tendency(df_house, "Single Family Residential", city_price_by_time)
         display_change_from_highest_to_now(city_price_change_5year)

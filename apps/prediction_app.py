@@ -7,19 +7,19 @@ DIRNAME = os.path.abspath(__file__ + "/../")
 
 app = Flask(__name__)
 
+
 # loading the model
-
 with open(f'{DIRNAME}/ML_model/Price_Model', 'rb') as f:
-    model = pickle.load(f)
+   model = pickle.load(f)
 
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+   @app.route('/')
+   def home():
+      return render_template('index.html')
 
 
-@app.route('/', methods=['POST'])
-def predict():
+   @app.route('/', methods=['POST'])
+   def predict():
    try:
       """
       Required input for machine learning model
