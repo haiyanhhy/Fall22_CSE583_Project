@@ -20,8 +20,8 @@ class BasicTestCase(unittest.TestCase):
         self.assertFalse(current_app is None)
     def test_testing(self):
         self.assertTrue(self.app.config['TESTING'])
-
+"""
 if __name__ == '__main__':
     tests=unittest.TestLoader().loadTestsFromTestCase(BasicTestCase)
     unittest.TextTestRunner(verbosity=2).run(tests)
-
+"""
