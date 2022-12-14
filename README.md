@@ -20,6 +20,7 @@ scikit-learn
 
 # Main technology used:
 [![Python Package using Conda](https://github.com/haiyanhhy/Fall22_CSE583_Project/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/haiyanhhy/Fall22_CSE583_Project/actions/workflows/python-package-conda.yml)
+
 Python, Streamlit, Folium, Flask, HTML, Plotly, Matplobib
 
 # Data Source
