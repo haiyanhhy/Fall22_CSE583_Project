@@ -7,15 +7,15 @@ Our project provides an interactive dashboard & open-source tool for house buyer
 # Installation & Instruction
 (Haiyan + Xuqing)
 Others to review our own workstream
-(From Alex: Haiyan and Xuqing please check if this is the correct procedure)
-use visual environment environment.yml
-run commands:
-**python prediction_app.py**
-open up a new terminal __without exiting__ the previous process
-input in the new terminal:
-**python city_house.py**
-**streamlit run city_house.py**
-the streamlit visualization board will automatically popup in your the web browser
+
+(From Alex: Haiyan and Xuqing please check if this is the correct procedure). 
+use visual environment environment.yml run commands:  
+**python prediction_app.py**. 
+open up a new terminal __without exiting__ the previous process. 
+input in the new terminal:  
+**python city_house.py**   
+**streamlit run city_house.py**  
+the streamlit visualization board will automatically popup in your the web browser  
 
 To follow this project, please install the following locally:
 
@@ -24,7 +24,7 @@ Python 3.8+
 Python packages
 pandas
 yfinance
-scikit-learn
+scikit-learn    
 (we are supposed to install everything in visual env instead of asking users to install on their local drive)
 
 # Main technology used:
