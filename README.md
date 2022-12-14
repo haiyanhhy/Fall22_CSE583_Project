@@ -3,7 +3,7 @@ First-time house buyers might not have a good understanding about the housing ma
 Leading real estate platforms such as Redfin and Zillow are providing users with home price prediction. However, users don’t have access to the assumptions and predictor variables used in the prediction model to evaluate its accuracy and reliability. 
 Our project provides an interactive dashboard & open-source tool for house buyers to visualize and predict house prices in the next 3 months or based on the selected features. Even though our analysis focuses on house prices in Greater Seattle Area, users can access to our code and make changes accordingly to enhance the dashboard and the prediction model. 
 # Organization of our project
-<img width="970" alt="image" src="https://user-images.githubusercontent.com/115179760/207680372-9a10cf99-e484-47fb-8b9a-708931737963.png">
+<img width="268" alt="image" src="https://user-images.githubusercontent.com/115179760/207691893-abc59f65-5d40-46ad-9b81-03972696d512.png">
 
 # Installation & Instruction
 1.use visual environment environment.yml run commands:  
