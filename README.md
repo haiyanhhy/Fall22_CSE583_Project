@@ -46,7 +46,6 @@ Through our application, Uusers can:
 2. Grasp house prices changes in the last 5 years by city
 3. Estimate house prices using random forest algorithm, based on the conditions selected by users (e.g. property type, number of rooms, lot size and the year the house was built, etc.) We also embedded the prediction model framework into the main page for ease of use. The algorithm achieved an accuracy rate of 76.8%.
 
-5. (Xuqing to elaborate how to use the prediction here....)
 In addition to that, we also predict house price trend in the next 3 months, using macro economic data such as CPI index in the US, median house sales price and mortgage interest rate to predict the change in house price. 
 Instructions
 # Addressing key challenges & Future work
@@ -60,5 +59,4 @@ Future work: if time allows, we would love to have an API integration so that th
 When predicting house price in the next 3 months, we follow instructions in a video made by Dataquest on Youtube. 
 Link: https://www.youtube.com/watch?v=IsoW7_X3j5A&t=778s
 We then customize the data to focus the analysis on Seattle area and using the latest data till Oct 2022.
-**
-(Everyone to review and add sources we use for references)**
+
