@@ -10,8 +10,8 @@ Others to review our own workstream
 
 (From Alex: Haiyan and Xuqing please check if this is the correct procedure). 
 use visual environment environment.yml run commands:  
-**python prediction_app.py**. 
-open up a new terminal __without exiting__ the previous process. 
+**python prediction_app.py**  
+open up a new terminal *without exiting* the previous process. 
 input in the new terminal:  
 **python city_house.py**   
 **streamlit run city_house.py**  
