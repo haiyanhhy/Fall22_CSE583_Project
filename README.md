@@ -13,7 +13,6 @@ use visual environment environment.yml run commands:
 **python apps/prediction_app.py**  
 open up a new terminal *without exiting* the previous process. 
 input in the new terminal:  
-**python apps/city_house.py**   
 **streamlit run apps/city_house.py**  
 the streamlit visualization board will automatically popup in your the web browser  
 
