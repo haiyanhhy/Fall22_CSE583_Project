@@ -31,13 +31,13 @@ All.csv is a file union all the seperate csv files, analysis could based on this
 
 # Use cases
 Targeted users: Young professionals who are going to buy their first homes in Greater Seattle Area. 
-Through our application, Uusers can: 
+Through our application, Users can: 
 1. Look for historical house prices/sqft by city in Greater Seattle Area, depending on their search criteria (e.g. types of houses, sold year, city, # of bathrooms,...). Data is shown on a heatmap to assist buyers with a quick identification of the potential focused neighborhood which matches with their budgets
 2. Grasp house prices changes in the last 5 years by city
 3. Estimate house prices using random forest algorithm, based on the conditions selected by users (e.g. property type, number of rooms, lot size and the year the house was built, etc.) We also embedded the prediction model framework into the main page for ease of use. The algorithm achieved an accuracy rate of 76.8%.
 
 In addition to that, we also predict house price trend in the next 3 months, using macro economic data such as CPI index in the US, median house sales price and mortgage interest rate to predict the change in house price. 
-Instructions
+
 # Addressing key challenges & Future work
 1. Our dashboard and analysis are using historical data which we downloaded from Redfin, Fred and Zillow. Therefore, the dashboard is not automatically updated to show the latest data to users.
 2. Streamlit has speed issues. The entire Python script is re-run in the browser every time users interact with the application.
