@@ -5,14 +5,10 @@ Our project provides an interactive dashboard & open-source tool for house buyer
 # Organization of our project
 (Van to update)
 # Installation & Instruction
-(Haiyan + Xuqing)
-Others to review our own workstream
-
-(From Alex: Haiyan and Xuqing please check if this is the correct procedure). 
-use visual environment environment.yml run commands:  
+1.use visual environment environment.yml run commands:  
 **python apps/prediction_app.py**  
-open up a new terminal *without exiting* the previous process. 
-input in the new terminal:  
+2.open up a new terminal *without exiting* the previous process. \
+3.input in the new terminal:  
 **streamlit run apps/city_house.py**  
 the streamlit visualization board will automatically popup in your the web browser  
 
